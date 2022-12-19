@@ -1,0 +1,448 @@
+
+//Michael Nester, Luca Nero
+//CSC 106
+//Final Project
+
+
+
+//STUFF TO DO
+//change the "map" to either actually work with the current design, or make it more khan stuff
+//maybe use tiles, like from the matching game, with an image representing the player on one tile
+//the player starts in the middle of a 5 by 5 grid
+//maybe hitting an obstacle is like flipping a tile
+// then make a new scene to ask a question
+//I am going to make a spin-off of this and use the tiles to see how it works
+//the original code is set to take inputs from a regular terminal, like typing*
+//*change this to use buttons with choices (up, down, left, right)
+var started = false;
+var NUM_COLS = 5;
+var NUM_ROWS = 5;
+var move = 54;
+var ogX = 120;
+var ogY = 150;
+var playerX = 120;
+var playerY = 150;
+var player = function(playerX, playerY) {
+  this.x = playerX;
+  this.y = playerY;
+  this.size = 50;
+};
+//USED \/
+player.prototype.draw = function() {
+      image(getImage("avatars/starky-seed"), this.x, this.y, this.size, this.size);
+};
+player.prototype.moveUp = function() {
+    if (this.y > 105) {
+    this.y -= move;
+    }
+    else {
+        this.y = 165;
+        this.x = 170;
+    }
+};
+player.prototype.moveDown = function() {
+if (this.y < 250) {
+    this.y += move;
+    }
+    else {
+        this.y = 165;
+        this.x = 170;
+    }
+
+};
+player.prototype.moveLeft = function() {
+    if (this.x > 90) {
+    this.x -= move;
+    } else {
+        this.y = 165;
+        this.x = 170;
+    }
+
+
+};
+player.prototype.moveRight = function() {
+if (this.x < 250) {
+    this.x += move;
+    } else {
+        this.y = 165;
+        this.x =170;
+    }
+};
+//USED /\
+
+//trying to get the moves to stay on the board
+var moveUp = new player(playerX, playerY - move);
+    
+var drawPlayer = new player(170, 165);
+
+var Tile = function(x, y, face) {
+    this.posX = 2;
+    this.posY = 2;
+    this.x = x;
+    this.y = y;
+    this.size = 50;
+    this.face = face;
+    this.isFaceUp = true;
+    this.isMatch = false;
+};
+
+var button = function(x, y, direction) {
+    this.x = x;
+    this.y = y;
+    this.size = 25;
+    this.btn = direction;
+};
+
+button.prototype.draw = function() {
+     fill(255, 0, 0);
+     rect(this.x, this.y, this.size, this.size, 10);
+     fill(0, 0, 0);
+     text(this.btn, this.x + 10, this.y + 10, 25, 25);
+};
+
+
+Tile.prototype.draw = function() {
+    fill(166, 103, 40);
+    strokeWeight(2);
+    rect(this.x, this.y, this.size, this.size, 10);
+};
+Tile.prototype.drawStart = function() {
+    fill(181, 148, 105);
+    strokeWeight(2);
+    rect(this.x, this.y, this.size, this.size, 0);
+    //image(getImage("avatars/starky-seed"), ogX, ogY, this.size, this.size);
+
+    
+};
+
+/*Tile.prototype.moveUp = function() {
+    fill(214, 247, 202);
+    strokeWeight(2);
+    rect(this.x, this.y, this.size, this.size, 10);
+    image(getImage("avatars/starky-seed"), ogX, ogY - up, this.size, this.size);
+    
+};
+
+Tile.prototype.moveDown = function() {
+    fill(214, 247, 202);
+    strokeWeight(2);
+    rect(this.x, this.y, this.size, this.size, 10);
+    image(getImage("avatars/starky-seed"), ogX, ogY + down, this.size, this.size);
+    //ogY = ogY + down;
+};
+
+Tile.prototype.moveLeft = function() {
+    fill(214, 247, 202);
+    strokeWeight(2);
+    rect(this.x, this.y, this.size, this.size, 10);
+    image(getImage("avatars/starky-seed"), 120 - left, 150, this.size, this.size);
+    //ogX = ogX - left;
+};
+
+Tile.prototype.moveRight = function() {
+    fill(214, 247, 202);
+    strokeWeight(2);
+    rect(this.x, this.y, this.size, this.size, 10);
+    image(getImage("avatars/starky-seed"), 120 + right, 150, this.size, this.size);
+    //ogX = ogX + right;
+};*/
+
+Tile.prototype.isUnderMouse = function(x, y) {
+    return x >= this.x && x <= this.x + this.size  &&
+        y >= this.y && y <= this.y + this.size;
+};
+
+var tiles = [];
+for (var i = 0; i < NUM_COLS; i++) {
+    for (var j = 0; j < NUM_ROWS; j++) {
+        var tileX = i * 54 + 60;
+        var tileY = j * 54 + 60;
+        tiles.push(new Tile(tileX, tileY));
+       // if (i === 2 && j === 2) {
+         //   image(getImage("avatars/starky-seedling"), this.posX, this.posY, this.size, this.size);
+       // }
+    }
+}
+
+//for (var i = 0; i < tiles.length; i++) {
+       // tiles[i].drawStart();
+   // }
+
+
+
+//USED \/
+draw = function() {
+    //draw splash screen
+    if (started === false) {
+    /*fill(0, 184, 37);
+    for (var i = 0; i < tiles.length; i++) {
+        tiles[i].drawStart();
+    }
+    
+    upBtn.draw();
+    downBtn.draw();
+    leftBtn.draw();
+    rightBtn.draw();*/
+    rect(100,150,200,100,50);
+    fill (0, 0, 0);
+    textSize(50);
+    text("START",120,220);
+    var f = createFont("monospace");
+    textFont(f);
+    text(" MATCHING\n      GAME!",25, 50); 
+    fill(245, 103, 103);
+    rect(0, 0, 50, 443, 0);
+    rect(349, 0, 50, 458, 0);
+    fill(189, 142, 49);
+    rect(24, 0, 5, 467, 0);
+    rect(373, 0, 5, 467, 0);
+    }
+    //if start button is clicked...
+    if (mouseX>100&&mouseX<300&&mouseY>150&&mouseY<250&&mouseIsPressed) {
+        started = true;
+    }
+    // ... start game
+    else if (started === true) {
+    background(255, 255, 255);
+
+    for (var i = 0; i < tiles.length; i++) {
+    tiles[i].drawStart();
+    }
+    drawPlayer.draw();
+    if (mouseIsPressed && mouseX > 300 && mouseX < 325 &&  mouseY < 225 && mouseY > 200) {
+    //if (keyIsPressed && key.code === 32) {
+    drawPlayer.draw();
+    }
+    if (mouseIsPressed && mouseX > 300 && mouseX < 325 && mouseY < 275 && mouseY > 250) {
+        drawPlayer.moveDown();
+    
+    }
+    if (mouseIsPressed && mouseX > 285 && mouseX < 305 && mouseY < 250 && mouseY > 225) {
+        drawPlayer.moveLeft();
+    
+    }
+    if (mouseIsPressed && mouseX > 315 && mouseX < 340 && mouseY < 250 && mouseY > 225) {
+         //for (var i = 0; i < tiles.length; i++) {
+            drawPlayer.moveRight();
+    
+    }
+    
+    }
+};
+keyPressed = function() {
+    if (keyCode === UP) {
+        drawPlayer.moveUp();
+        drawPlayer.draw();
+    }
+    if (keyCode === DOWN) {
+        drawPlayer.moveDown();
+        drawPlayer.draw();
+    }
+    if (keyCode === LEFT) {
+        drawPlayer.moveLeft();
+        drawPlayer.draw();
+    }
+    if (keyCode === RIGHT) {
+        drawPlayer.moveRight();
+        drawPlayer.draw();
+    }
+    
+};
+// USE \/
+//Global Variable Calls.
+
+var playerName;
+/*var playerX;
+var playerY;*/
+var obs1X;
+var obs1Y;
+var obs2X;
+var obs2Y;
+var obs3X;
+var obs3Y;
+var treasure;
+var treasureX;
+var treasureY;
+var turnsRemaining;
+var livesLeft;
+var rightWrong;
+var answer;
+var life = "<3";
+var move;
+//Global Function Calls.
+
+
+var isTreasure;
+var showInstructions = function() {
+	text("welcome to the game. Use WASD to move around one cell at a time, looking for the treasure. Beware of obstacles.\n", 200, 10, 100, 50);
+};
+
+var getPlayerName = function() {
+	text("Enter name: ", 100, 150, 100, 50);
+	//playerName;
+	return playerName;
+};
+
+var drawMap = function(playerX, playerY, obs1X, obs1Y, treasureX, treasureY, livesLeft) {
+		var onObstacle = "|{!!}";
+		var obstacleFailed = "|[XX]";
+		var obstaclePassed = "|[:)]";
+		var lives = "Lives: ";
+		var finalMap = "";
+		var rows = 0;
+			 while (rows < 5) {
+			for (var i = 0; i < 5; i++)
+			{
+				if (playerX === i && rows === playerY)
+				{
+					finalMap += player;
+				}
+				else if (playerX === obs1X && playerX === i && playerY === obs1Y && playerY === rows)
+				{
+					finalMap += onObstacle;
+				}
+				else {
+				    
+				}
+			}
+			 
+			rows++;
+			 }
+			finalMap += "|\n";
+		finalMap += "x\n";
+		finalMap += lives;
+		if (livesLeft === 3) {
+			finalMap += "<3 <3 <3\n";
+		}
+		if (livesLeft === 2) {
+			finalMap += "<3 <3\n";
+		}
+		if (livesLeft === 1) {
+			finalMap += "<3\n";
+		}
+		text(finalMap, 10, 10, 100, 100);
+		return finalMap;
+};
+
+var initGlobals = function() {
+	var isTreasure = false;
+	var max = 4;
+	playerName = "";
+	playerX = 2;
+	playerY = 2;
+	turnsRemaining = 20;
+	livesLeft = 3;
+    var range = [0, 1, 3, 4];
+	random(3, 360);
+	var random = random() % (range.length);
+	obs1X = range[random];
+	obs1Y = range[random];
+	treasureX = range[random];
+	treasureY = range[random];
+	drawMap(playerX, playerY, obs1X, obs1Y, treasureX, treasureY, livesLeft);
+};
+
+var movePlayer = function(move) {
+		if (move === 'W') {
+			playerY = playerY - 1;
+			turnsRemaining = turnsRemaining - 1;
+		}
+		if (move === 'S') {
+			playerY = playerY + 1;
+			turnsRemaining = turnsRemaining - 1;
+		}
+		if (move === 'A') {
+			playerX = playerX - 1;
+			turnsRemaining = turnsRemaining - 1;
+		}
+		if (move === 'D') {
+			playerX = playerX + 1;
+			turnsRemaining = turnsRemaining - 1;
+		}
+		//gameLoop(turnsRemaining, isTreasure);
+		drawMap(playerX, playerY, obs1X, obs1Y, treasureX, treasureY, livesLeft);
+		
+};
+//gameloop needs getmove
+//getmove needs moveplayer
+//moveplayer needs gameloop
+//getmove > gameloop > moveplayer
+
+
+var gameLoop = function(turnsRemaining, treasure) {
+	while (turnsRemaining > 0 && treasure === false && livesLeft > 0) {
+		isTreasure();
+	}
+	/*if (treasure == true) {
+		cout << "YOU WIN!!!";
+
+	}*/
+};
+
+var obstacle1 = function() {
+	var obspassed = false;
+	if (playerX === obs1X && playerY === obs1Y) {
+		while (obspassed === false) {
+			text("You have hit an obstacle. Answer a question to pass. (tip: answer with the number of your choice)", 100, 100, 100, 50);
+			text("What character is used at the end of most all statements in C++? (Hint: its also in other languages)\n", 100, 100, 100, 50);
+			text("1. .\n 2. :\n 3. ;\n 4. |\n", 100, 100, 100, 50);
+			answer = 3;
+			if (answer === 3) {
+				text("CORRECT! you may continue", 100, 100 ,100, 50);
+				obspassed = true;
+			}
+			else {
+				obspassed = false;
+		} 
+		gameLoop(turnsRemaining, obspassed);
+	}
+	}
+	return obspassed;
+};
+
+	var isTreasure = function() {
+	//if posx and y = treasurex and y, return true
+	//call in gameloop
+	//if isTreasure() == true;
+	//end gameloop;
+	var isTreasure = false;
+
+	if (playerX === treasureX && playerY === treasureY) {
+		while (isTreasure !== true || livesLeft > 0) {
+			text("You have landed on something shiny. Answer a question to dig. (tip: answer with the number of your choice)", 100, 100, 100, 50);
+		text("During what year did developement of c++ first start?", 100, 100, 100, 50);
+			text("1. 1990" + "2. 1979\n" + "3. 1912\n" + "4. 1987\n", 100, 100, 100, 50);
+			//cin >> answer;
+			if (answer === 3) {
+				text("CORRECT! You dig and find the treasure!!!", 100, 100, 100, 50);
+				isTreasure = true;
+			}
+			else {
+				text("WRONG try again, carefully!", 100, 100, 100, 50);
+				livesLeft = livesLeft - 1;
+			}
+			drawMap(playerX, playerY, obs1X, obs1Y, treasureX, treasureY, livesLeft);
+		} 
+	}
+	else {
+		isTreasure = false;
+	}
+	gameLoop(turnsRemaining, isTreasure);
+	return isTreasure;
+};
+
+var startGame = function() {
+	showInstructions();
+	getPlayerName();
+	initGlobals();
+	gameLoop(turnsRemaining, false);
+};
+
+var main = function() {
+	startGame();
+};
+fill(0, 0, 0);
+drawMap(playerX, playerY, obs1X, obs1Y, treasureX, treasureY, livesLeft);
+movePlayer(move);
+gameLoop(turnsRemaining, treasure);
+
