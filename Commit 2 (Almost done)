@@ -1,0 +1,247 @@
+
+//Michael Nester, Luca Nero
+//CSC 106
+//Final Project
+
+background(240, 240, 240);
+var started = false;
+var NUM_COLS = 5;
+var NUM_ROWS = 5;
+var move = 54;
+var playerPosX = 0;
+var playerPosY = 0;
+
+
+var player = function(playerX, playerY) {
+  this.x = playerX;
+  this.y = playerY;
+  this.size = 50;
+};
+
+player.prototype.draw = function() {
+    fill(random(0, 255), random(0, 255), random(0, 255));
+    textSize(35);
+    //text("{..}", this.x + 2, this.y + 10, this.size, this.size);
+      image(getImage("avatars/starky-seed"), this.x, this.y, this.size, this.size);
+      textSize(19);
+      text("**", this.x + 15, this.y + 30, this.size, this.size);
+};
+
+player.prototype.moveUp = function() {
+    if (this.y > 105) {
+    this.y -= move;
+    }
+    else {
+        this.y = 165;
+        this.x = 170;
+    }
+};
+player.prototype.moveDown = function() {
+if (this.y < 250) {
+    this.y += move;
+    }
+    else {
+        this.y = 165;
+        this.x = 170;
+    }
+    playerPosY += this.y;
+    playerPosX += this.x;
+
+};
+player.prototype.moveLeft = function() {
+    if (this.x > 90) {
+    this.x -= move;
+    } else {
+        this.y = 165;
+        this.x = 170;
+    }
+
+playerPosY += this.y;
+    playerPosX += this.x;
+};
+player.prototype.moveRight = function() {
+if (this.x < 250) {
+    this.x += move;
+    } else {
+        this.y = 165;
+        this.x =170;
+    }
+    playerPosY += this.y;
+    playerPosX += this.x;
+};
+
+//trying to get the moves to stay on the board
+
+var drawPlayer = new player(170, 170);
+var Tile = function(x, y, face) {
+    this.posX = 2;
+    this.posY = 2;
+    this.x = x;
+    this.y = y;
+    this.size = 50;
+    this.face = face;
+    this.isFaceUp = true;
+    this.isMatch = false;
+};
+
+
+var scene = function(background, statement, answer){
+    this.background = background;
+    this.title = statement;
+    this.answer = answer;
+};
+
+var Question1 = new scene(color(212, 235, 188), "Question: What character ends every statement in java?", 2);
+
+Tile.prototype.draw = function() {
+    fill(166, 103, 40);
+    strokeWeight(2);
+    rect(this.x, this.y, this.size, this.size, 10);
+};
+
+Tile.prototype.drawStart = function() {
+    fill(181, 148, 105);
+    strokeWeight(2);
+    rect(this.x, this.y, this.size, this.size, 0);
+};
+
+var tiles = [];
+
+for (var i = 0; i < NUM_COLS; i++) {
+    for (var j = 0; j < NUM_ROWS; j++) {
+        var tileX = i * 54 + 60;
+        var tileY = j * 54 + 60;
+        tiles.push(new Tile(tileX, tileY));
+    }
+}
+
+
+
+var tileCenterX = [80, 135, 243, 298];
+var tileCenterY = [80, 135, 240, 290];
+
+var tileIndexX = [0, 1, 2, 3, 4];
+var tileIndexY = [0, 1, 2, 3, 4];
+
+var drawObs = function(x, y) {
+    noStroke();
+    fill(random(0, 255), random(0, 255), random(0, 255));
+    rect(x, y, 10, 10, 0);  
+};
+
+
+
+var obs = [];
+
+
+var indexX = floor(random(tileCenterX.length));
+var indexY = floor(random(tileCenterY.length));
+var indexX2 = floor(random(tileCenterX.length));
+var indexY2 = floor(random(tileCenterY.length));
+var indexX3 = floor(random(tileCenterX.length));
+var indexY3 = floor(random(tileCenterY.length));
+
+//TITLE SCREEN//
+    fill (0, 0, 0);
+    textSize(50);
+    text("TREASURE\n    GAME!",64, 50); 
+    fill(214, 247, 202);
+    rect(0, 0, 50, 443, 0);
+    rect(349, 0, 50, 458, 0);
+    fill(255, 255, 255);
+    fill(125, 95, 12);
+    rect(24, 0, 5, 467, 0);
+    rect(373, 0, 5, 467, 0);
+    //treasure image
+    var titleI = getImage("cute/ChestOpen");
+    image(titleI, 124, 154, 151, 169);
+    textSize(36);
+    fill(255, 255, 255);
+
+//USED \/
+draw = function() {
+    //draw splash screen
+    if (started === false) {
+
+//START BUTTON IMPLEMENTATION
+var Button = function(config) {
+    this.x = config.x || 0;
+    this.y = config.y || 0;
+    this.width = config.width || 150;
+    this.height = config.height || 50;
+    this.label = config.label || "Click";
+    this.onClick = config.onClick || function() {};
+};
+
+Button.prototype.draw = function() {
+    rect(this.x, this.y, this.width, this.height, 35);
+    fill(99, 66, 5);
+    textSize(19);
+    textAlign(LEFT, TOP);
+    text(this.label, this.x+10, this.y+this.height/4);
+};
+
+Button.prototype.isMouseInside = function() {
+    return mouseX > this.x &&
+           mouseX < (this.x + this.width) &&
+           mouseY > this.y &&
+           mouseY < (this.y + this.height);
+};
+
+Button.prototype.handleMouseClick = function() {
+    if (this.isMouseInside()) {
+        this.onClick();
+    }
+};
+
+var btn1 = new Button({
+    x: 124,
+    y: 218,
+    label: "       START",
+    
+});
+fill(186, 186, 186);
+btn1.draw();
+
+mouseClicked = function() {
+    btn1.handleMouseClick();
+    if (mouseClicked(btn1)){
+        started = true;
+    }
+};
+    
+    }
+    //if start button is clicked...
+if (started === true) {
+    background(255, 255, 255);
+
+    for (var i = 0; i < tiles.length; i++) {
+    tiles[i].drawStart();
+    }
+    drawPlayer.draw();
+    drawPlayer.draw();
+    drawObs(tileCenterX[indexX], tileCenterY[indexY]);
+    drawObs(tileCenterX[indexX2], tileCenterY[indexY2]);
+    drawObs(tileCenterX[indexX3], tileCenterY[indexY3]);
+
+    }
+};
+keyPressed = function() {
+    if (keyCode === UP) {
+        drawPlayer.moveUp();
+        drawPlayer.draw();
+    }
+    if (keyCode === DOWN) {
+        drawPlayer.moveDown();
+        drawPlayer.draw();
+    }
+    if (keyCode === LEFT) {
+        drawPlayer.moveLeft();
+        drawPlayer.draw();
+    }
+    if (keyCode === RIGHT) {
+        drawPlayer.moveRight();
+        drawPlayer.draw();
+    }
+    
+};
